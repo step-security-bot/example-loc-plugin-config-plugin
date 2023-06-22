@@ -12,6 +12,9 @@ on:
   schedule:
     - cron: '0 0 * * *'
 
+permissions:
+  contents: read
+
 jobs:
   compatibility:
     name: Ensure plugin compatibility against targeted platform version & the latest EAP snapshot for both IDEA Community, IDEA Ultimate.
@@ -19,6 +22,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@55d479fb1c5bcad5a4f9099a5d9f37c8857b2845 # v2.4.1
+        with:
+          egress-policy: audit
+
       - name: Check out repository
         uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
 
@@ -37,7 +45,7 @@ jobs:
 
       - name: Verify plugin on IntelliJ Platforms
         id: verify
-        uses: ChrisCarini/intellij-platform-plugin-verifier-action@latest
+        uses: ChrisCarini/intellij-platform-plugin-verifier-action@7a8cdbbfbf93e08d3a00c150ef1ce55592a5b549 # latest
         with:
           # Generated from the `generateIdeVersionsList` task above.
           ide-versions: build/intellij-platform-plugin-verifier-action-ide-versions-file.txt
